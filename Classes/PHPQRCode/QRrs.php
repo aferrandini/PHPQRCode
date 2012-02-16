@@ -1,9 +1,11 @@
 <?php
-
 /*
  * PHP QR Code encoder
  *
- * Common constants
+ * Reed-Solomon error correction support
+ * 
+ * Copyright (C) 2002, 2003, 2004, 2006 Phil Karn, KA9Q
+ * (libfec is released under the GNU Lesser General Public License.)
  *
  * Based on libqrencode C library distributed under LGPL 2.1
  * Copyright (C) 2006, 2007, 2008, 2009 Kentaro Fukuchi <fukuchi@megaui.net>
@@ -26,29 +28,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
  
-	// Encoding modes
-	 
-	define('QR_MODE_NUL', -1);
-	define('QR_MODE_NUM', 0);
-	define('QR_MODE_AN', 1);
-	define('QR_MODE_8', 2);
-	define('QR_MODE_KANJI', 3);
-	define('QR_MODE_STRUCTURE', 4);
+    class PHPQRCode_QRrs {
+    
+        public static $items = array();
+        
+        //----------------------------------------------------------------------
+        public static function init_rs($symsize, $gfpoly, $fcr, $prim, $nroots, $pad)
+        {
+            foreach(self::$items as $rs) {
+                if($rs->pad != $pad)       continue;
+                if($rs->nroots != $nroots) continue;
+                if($rs->mm != $symsize)    continue;
+                if($rs->gfpoly != $gfpoly) continue;
+                if($rs->fcr != $fcr)       continue;
+                if($rs->prim != $prim)     continue;
 
-	// Levels of error correction.
+                return $rs;
+            }
 
-	define('QR_ECLEVEL_L', 0);
-	define('QR_ECLEVEL_M', 1);
-	define('QR_ECLEVEL_Q', 2);
-	define('QR_ECLEVEL_H', 3);
-	
-	// Supported output formats
-	
-	define('QR_FORMAT_TEXT', 0);
-	define('QR_FORMAT_PNG',  1);
-	
-	class qrstr {
-		public static function set(&$srctab, $x, $y, $repl, $replLen = false) {
-			$srctab[$y] = substr_replace($srctab[$y], ($replLen !== false)?substr($repl,0,$replLen):$repl, $x, ($replLen !== false)?$replLen:strlen($repl));
-		}
-	}	
+            $rs = PHPQRCode_QRrsItem::init_rs_char($symsize, $gfpoly, $fcr, $prim, $nroots, $pad);
+            array_unshift(self::$items, $rs);
+
+            return $rs;
+        }
+    }

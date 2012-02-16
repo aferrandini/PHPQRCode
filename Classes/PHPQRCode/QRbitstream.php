@@ -25,7 +25,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
      
-    class QRbitstream {
+    class PHPQRCode_QRbitstream {
     
         public $data = array();
         
@@ -45,7 +45,7 @@
         //----------------------------------------------------------------------
         public static function newFromNum($bits, $num)
         {
-            $bstream = new QRbitstream();
+            $bstream = new PHPQRCode_QRbitstream();
             $bstream->allocate($bits);
             
             $mask = 1 << ($bits - 1);
@@ -64,7 +64,7 @@
         //----------------------------------------------------------------------
         public static function newFromBytes($size, $data)
         {
-            $bstream = new QRbitstream();
+            $bstream = new PHPQRCode_QRbitstream();
             $bstream->allocate($size * 8);
             $p=0;
 
@@ -85,7 +85,7 @@
         }
         
         //----------------------------------------------------------------------
-        public function append(QRbitstream $arg)
+        public function append(PHPQRCode_QRbitstream $arg)
         {
             if (is_null($arg)) {
                 return -1;
@@ -111,7 +111,7 @@
             if ($bits == 0) 
                 return 0;
 
-            $b = QRbitstream::newFromNum($bits, $num);
+            $b = PHPQRCode_QRbitstream::newFromNum($bits, $num);
             
             if(is_null($b))
                 return -1;
@@ -128,7 +128,7 @@
             if ($size == 0) 
                 return 0;
 
-            $b = QRbitstream::newFromBytes($size, $data);
+            $b = PHPQRCode_QRbitstream::newFromBytes($size, $data);
             
             if(is_null($b))
                 return -1;

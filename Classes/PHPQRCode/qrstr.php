@@ -3,17 +3,10 @@
 /*
  * PHP QR Code encoder
  *
- * This file contains MERGED version of PHP QR Code library.
- * It was auto-generated from full version for your convenience.
+ * Common constants
  *
- * This merged version was configured to not requre any external files,
- * with disabled cache, error loging and weker but faster mask matching.
- * If you need tune it up please use non-merged version.
- *
- * For full version, documentation, examples of use please visit:
- *
- *    http://phpqrcode.sourceforge.net/
- *    https://sourceforge.net/projects/phpqrcode/
+ * Based on libqrencode C library distributed under LGPL 2.1
+ * Copyright (C) 2006, 2007, 2008, 2009 Kentaro Fukuchi <fukuchi@megaui.net>
  *
  * PHP QR Code is distributed under LGPL 3
  * Copyright (C) 2010 Dominik Dzienia <deltalab at poczta dot fm>
@@ -33,4 +26,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
  
- 
+class PHPQRCode_qrstr {
+    public static function set(&$srctab, $x, $y, $repl, $replLen = false) {
+        $srctab[$y] = substr_replace($srctab[$y], ($replLen !== false)?substr($repl,0,$replLen):$repl, $x, ($replLen !== false)?$replLen:strlen($repl));
+    }
+}
