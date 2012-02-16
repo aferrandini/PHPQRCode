@@ -27,3 +27,6 @@ Now you can use the PHPQRCode libray everywhere in your Symfony2 app!
 Sample code:
 
     \PHPQRCode_QRcode::png("Test", "/tmp/qrcode.png", 'L', 4, 2);
+
+
+This library it's an import of phpqrcodelib that you can find at http://phpqrcode.sourceforge.net/
