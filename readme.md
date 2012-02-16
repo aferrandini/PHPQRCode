@@ -1,3 +1,5 @@
+# PHP QRCode Library #
+
 To install this library please follow the next steps:
 
 First add the repo to your deps file:
