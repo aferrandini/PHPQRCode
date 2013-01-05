@@ -28,13 +28,13 @@ Now you can use the PHPQRCode libray everywhere in your Symfony2 app!
 
 ## Symfony 2.1.x
 
-1. Install the library:
+1- Install the library:
 
 Change directory to your Symfony2 root and execute:
 
     git clone https://github.com/aferrandini/PHPQRCode.git vendor/phpqrcode/PHPQRCode
 
-2. Register the library:
+2- Register the library:
 
 Open the file `app/autoload.php` and insert this new line after `$loader = ...`:
 
