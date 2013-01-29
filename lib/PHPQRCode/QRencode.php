@@ -25,8 +25,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+namespace PHPQRCode;
 
-class PHPQRCode_QRencode {
+class QRencode {
 
     public $casesensitive = true;
     public $eightbit = false;
@@ -37,13 +38,13 @@ class PHPQRCode_QRencode {
 
     public $structured = 0; // not supported yet
 
-    public $level = PHPQRCode_Config::QR_ECLEVEL_L;
-    public $hint = PHPQRCode_Config::QR_MODE_8;
+    public $level = Constants::QR_ECLEVEL_L;
+    public $hint = Constants::QR_MODE_8;
 
     //----------------------------------------------------------------------
-    public static function factory($level = PHPQRCode_Config::QR_ECLEVEL_L, $size = 3, $margin = 4)
+    public static function factory($level = Constants::QR_ECLEVEL_L, $size = 3, $margin = 4)
     {
-        $enc = new PHPQRCode_QRencode();
+        $enc = new QRencode();
         $enc->size = $size;
         $enc->margin = $margin;
 
@@ -56,19 +57,19 @@ class PHPQRCode_QRencode {
                 break;
             case 'l':
             case 'L':
-                    $enc->level = PHPQRCode_Config::QR_ECLEVEL_L;
+                    $enc->level = Constants::QR_ECLEVEL_L;
                 break;
             case 'm':
             case 'M':
-                    $enc->level = PHPQRCode_Config::QR_ECLEVEL_M;
+                    $enc->level = Constants::QR_ECLEVEL_M;
                 break;
             case 'q':
             case 'Q':
-                    $enc->level = PHPQRCode_Config::QR_ECLEVEL_Q;
+                    $enc->level = Constants::QR_ECLEVEL_Q;
                 break;
             case 'h':
             case 'H':
-                    $enc->level = PHPQRCode_Config::QR_ECLEVEL_H;
+                    $enc->level = Constants::QR_ECLEVEL_H;
                 break;
         }
 
@@ -78,7 +79,7 @@ class PHPQRCode_QRencode {
     //----------------------------------------------------------------------
     public function encodeRAW($intext, $outfile = false)
     {
-        $code = new PHPQRCode_QRcode();
+        $code = new QRcode();
 
         if($this->eightbit) {
             $code->encodeString8bit($intext, $this->version, $this->level);
@@ -92,7 +93,7 @@ class PHPQRCode_QRencode {
     //----------------------------------------------------------------------
     public function encode($intext, $outfile = false)
     {
-        $code = new PHPQRCode_QRcode();
+        $code = new QRcode();
 
         if($this->eightbit) {
             $code->encodeString8bit($intext, $this->version, $this->level);
@@ -100,12 +101,12 @@ class PHPQRCode_QRencode {
             $code->encodeString($intext, $this->version, $this->level, $this->hint, $this->casesensitive);
         }
 
-        PHPQRCode_QRtools::markTime('after_encode');
+        QRtools::markTime('after_encode');
 
         if ($outfile!== false) {
-            file_put_contents($outfile, join("\n", PHPQRCode_QRtools::binarize($code->data)));
+            file_put_contents($outfile, join("\n", QRtools::binarize($code->data)));
         } else {
-            return PHPQRCode_QRtools::binarize($code->data);
+            return QRtools::binarize($code->data);
         }
     }
 
@@ -119,16 +120,16 @@ class PHPQRCode_QRencode {
             ob_end_clean();
 
             if ($err != '')
-                PHPQRCode_QRtools::log($outfile, "ERROR: " . $err);
+                QRtools::log($outfile, "ERROR: " . $err);
 
-            $maxSize = (int)(PHPQRCode_Config::QR_PNG_MAXIMUM_SIZE / (count($tab)+2*$this->margin));
+            $maxSize = (int)(Constants::QR_PNG_MAXIMUM_SIZE / (count($tab)+2*$this->margin));
 
-            PHPQRCode_QRimage::png($tab, $outfile, min(max(1, $this->size), $maxSize), $this->margin,$saveandprint);
+            QRimage::png($tab, $outfile, min(max(1, $this->size), $maxSize), $this->margin,$saveandprint);
         } catch (Exception $e) {
             echo $e->getMessage();
             die();
 
-            PHPQRCode_QRtools::log($outfile, $e->getMessage());
+            QRtools::log($outfile, $e->getMessage());
         }
     }
 }

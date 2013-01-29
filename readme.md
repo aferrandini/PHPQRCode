@@ -2,7 +2,35 @@
 
 To install this library please follow the next steps:
 
-## Symfony 2.0.x
+## If you are running Symfony 2.1.x or 2.2.x
+
+### Install the library using `composer`:
+
+Add the required module to your `composer.json` file:
+
+    {
+        "require": {
+            ...
+            "aferrandini/phpqrcode": "master-dev"
+            ...
+        }
+    }
+
+Then run the command `composer update`.
+
+### Install the library with `git clone`:
+
+Change directory to your Symfony2 root and execute:
+
+    git clone https://github.com/aferrandini/PHPQRCode.git vendor/aferrandini/PHPQRCode
+
+Register the library:
+
+Open the file `app/autoload.php` and insert this new line after `$loader = ...`:
+
+    $loader->add('PHPQRCode', __DIR__.'/../vendor/aferrandini/phpqrcode/PHPQRCode/lib');
+
+## If you are running Symfony 2.0.x :(
 
 First add the repo to your `deps` file:
 
@@ -16,38 +44,18 @@ Then install the library with the command:
 
 Now the library is installed so, now we need to load in the `autoload.php`
 
-Open the file `./app/autoload.php` and add this line:
+Open the file `./app/autload.php` and add this line:
 
-    $loader->registerPrefixes(array(
-        // ...
-        'PHPQRCode' => __DIR__.'/../vendor/phpqrcode/Classes',
-        // ...
-    ));
+    require __DIR__ . '/../vendor/aferrandini/PHPQRCode/lib/Autoloader.php';
 
-Now you can use the PHPQRCode libray everywhere in your Symfony2 app!
-
-## Symfony 2.1.x
-
-1- Install the library:
-
-Change directory to your Symfony2 root and execute:
-
-    git clone https://github.com/aferrandini/PHPQRCode.git vendor/phpqrcode/PHPQRCode
-
-2- Register the library:
-
-Open the file `app/autoload.php` and insert this new line after `$loader = ...`:
-
-    $loader->add('PHPQRCode_', __DIR__.'/../vendor/phpqrcode/PHPQRCode/Classes');
-
-Now you can use the PHPQRCode libray everywhere in your Symfony2 app!
 
 ## Usage
 
 Sample code:
 
-    \PHPQRCode_QRcode::png("Test", "/tmp/qrcode.png", 'L', 4, 2);
+    \PHPQRCode\QRcode::png("Test", "/tmp/qrcode.png", 'L', 4, 2);
 
+This code will generate a PNG file on '/tmp/qrcode.png' with a QRCode that contains the word 'Test'.
 
 ## Acknowledgements
 
@@ -59,4 +67,3 @@ http://megaui.net/fukuchi/works/qrencode/index.en.html
 QR Code is registered trademarks of DENSO WAVE INCORPORATED in JAPAN and other countries.
 
 Reed-Solomon code encoder is written by Phil Karn, KA9Q. Copyright (C) 2002, 2003, 2004, 2006 Phil Karn, KA9Q
-

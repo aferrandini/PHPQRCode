@@ -21,8 +21,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
- 
-class PHPQRCode_QRimage {
+
+namespace PHPQRCode;
+
+class QRimage {
 
     //----------------------------------------------------------------------
     public static function png($frame, $filename = false, $pixelPerPoint = 4, $outerFrame = 4,$saveandprint=FALSE)

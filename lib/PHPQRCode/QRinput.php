@@ -24,8 +24,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
- 
-class PHPQRCode_QRinput {
+
+namespace PHPQRCode;
+
+class QRinput {
 
     public $items;
 
@@ -33,9 +35,9 @@ class PHPQRCode_QRinput {
     private $level;
 
     //----------------------------------------------------------------------
-    public function __construct($version = 0, $level = PHPQRCode_Config::QR_ECLEVEL_L)
+    public function __construct($version = 0, $level = Constants::QR_ECLEVEL_L)
     {
-        if ($version < 0 || $version > PHPQRCode_Config::QRSPEC_VERSION_MAX || $level > PHPQRCode_Config::QR_ECLEVEL_H) {
+        if ($version < 0 || $version > Constants::QRSPEC_VERSION_MAX || $level > Constants::QR_ECLEVEL_H) {
             throw new Exception('Invalid version no');
             return NULL;
         }
@@ -53,7 +55,7 @@ class PHPQRCode_QRinput {
     //----------------------------------------------------------------------
     public function setVersion($version)
     {
-        if($version < 0 || $version > PHPQRCode_Config::QRSPEC_VERSION_MAX) {
+        if($version < 0 || $version > Constants::QRSPEC_VERSION_MAX) {
             throw new Exception('Invalid version no');
             return -1;
         }
@@ -72,7 +74,7 @@ class PHPQRCode_QRinput {
     //----------------------------------------------------------------------
     public function setErrorCorrectionLevel($level)
     {
-        if($level > PHPQRCode_Config::QR_ECLEVEL_H) {
+        if($level > Constants::QR_ECLEVEL_H) {
             throw new Exception('Invalid ECLEVEL');
             return -1;
         }
@@ -83,7 +85,7 @@ class PHPQRCode_QRinput {
     }
 
     //----------------------------------------------------------------------
-    public function appendEntry(PHPQRCode_QRinputItem $entry)
+    public function appendEntry(QRinputItem $entry)
     {
         $this->items[] = $entry;
     }
@@ -92,7 +94,7 @@ class PHPQRCode_QRinput {
     public function append($mode, $size, $data)
     {
         try {
-            $entry = new PHPQRCode_QRinputItem($mode, $size, $data);
+            $entry = new QRinputItem($mode, $size, $data);
             $this->items[] = $entry;
             return 0;
         } catch (Exception $e) {
@@ -104,18 +106,18 @@ class PHPQRCode_QRinput {
 
     public function insertStructuredAppendHeader($size, $index, $parity)
     {
-        if( $size > PHPQRCode_Config::MAX_STRUCTURED_SYMBOLS ) {
+        if( $size > Constants::MAX_STRUCTURED_SYMBOLS ) {
             throw new Exception('insertStructuredAppendHeader wrong size');
         }
 
-        if( $index <= 0 || $index > PHPQRCode_Config::MAX_STRUCTURED_SYMBOLS ) {
+        if( $index <= 0 || $index > Constants::MAX_STRUCTURED_SYMBOLS ) {
             throw new Exception('insertStructuredAppendHeader wrong index');
         }
 
         $buf = array($size, $index, $parity);
 
         try {
-            $entry = new PHPQRCode_QRinputItem(PHPQRCode_Config::QR_MODE_STRUCTURE, 3, buf);
+            $entry = new QRinputItem(Constants::QR_MODE_STRUCTURE, 3, buf);
             array_unshift($this->items, $entry);
             return 0;
         } catch (Exception $e) {
@@ -129,7 +131,7 @@ class PHPQRCode_QRinput {
         $parity = 0;
 
         foreach($this->items as $item) {
-            if($item->mode != PHPQRCode_Config::QR_MODE_STRUCTURE) {
+            if($item->mode != Constants::QR_MODE_STRUCTURE) {
                 for($i=$item->size-1; $i>=0; $i--) {
                     $parity ^= $item->data[$i];
                 }
@@ -254,11 +256,11 @@ class PHPQRCode_QRinput {
             return false;
 
         switch($mode) {
-            case PHPQRCode_Config::QR_MODE_NUM:       return self::checkModeNum($size, $data);   break;
-            case PHPQRCode_Config::QR_MODE_AN:        return self::checkModeAn($size, $data);    break;
-            case PHPQRCode_Config::QR_MODE_KANJI:     return self::checkModeKanji($size, $data); break;
-            case PHPQRCode_Config::QR_MODE_8:         return true; break;
-            case PHPQRCode_Config::QR_MODE_STRUCTURE: return true; break;
+            case Constants::QR_MODE_NUM:       return self::checkModeNum($size, $data);   break;
+            case Constants::QR_MODE_AN:        return self::checkModeAn($size, $data);    break;
+            case Constants::QR_MODE_KANJI:     return self::checkModeKanji($size, $data); break;
+            case Constants::QR_MODE_8:         return true; break;
+            case Constants::QR_MODE_STRUCTURE: return true; break;
 
             default:
                 break;
@@ -288,7 +290,7 @@ class PHPQRCode_QRinput {
         do {
             $prev = $version;
             $bits = $this->estimateBitStreamSize($prev);
-            $version = PHPQRCode_QRspec::getMinimumVersion((int)(($bits + 7) / 8), $this->level);
+            $version = QRspec::getMinimumVersion((int)(($bits + 7) / 8), $this->level);
             if ($version < 0) {
                 return -1;
             }
@@ -300,9 +302,9 @@ class PHPQRCode_QRinput {
     //----------------------------------------------------------------------
     public static function lengthOfCode($mode, $version, $bits)
     {
-        $payload = $bits - 4 - PHPQRCode_QRspec::lengthIndicator($mode, $version);
+        $payload = $bits - 4 - QRspec::lengthIndicator($mode, $version);
         switch($mode) {
-            case PHPQRCode_Config::QR_MODE_NUM:
+            case Constants::QR_MODE_NUM:
                 $chunks = (int)($payload / 10);
                 $remain = $payload - $chunks * 10;
                 $size = $chunks * 3;
@@ -312,20 +314,20 @@ class PHPQRCode_QRinput {
                     $size += 1;
                 }
                 break;
-            case PHPQRCode_Config::QR_MODE_AN:
+            case Constants::QR_MODE_AN:
                 $chunks = (int)($payload / 11);
                 $remain = $payload - $chunks * 11;
                 $size = $chunks * 2;
                 if($remain >= 6)
                     $size++;
                 break;
-            case PHPQRCode_Config::QR_MODE_8:
+            case Constants::QR_MODE_8:
                 $size = (int)($payload / 8);
                 break;
-            case PHPQRCode_Config::QR_MODE_KANJI:
+            case Constants::QR_MODE_KANJI:
                 $size = (int)(($payload / 13) * 2);
                 break;
-            case PHPQRCode_Config::QR_MODE_STRUCTURE:
+            case Constants::QR_MODE_STRUCTURE:
                 $size = (int)($payload / 8);
                 break;
             default:
@@ -333,7 +335,7 @@ class PHPQRCode_QRinput {
                 break;
         }
 
-        $maxsize = PHPQRCode_QRspec::maximumWords($mode, $version);
+        $maxsize = QRspec::maximumWords($mode, $version);
         if($size < 0) $size = 0;
         if($size > $maxsize) $size = $maxsize;
 
@@ -371,7 +373,7 @@ class PHPQRCode_QRinput {
             if($bits < 0)
                 return -1;
 
-            $ver = PHPQRCode_QRspec::getMinimumVersion((int)(($bits + 7) / 8), $this->level);
+            $ver = QRspec::getMinimumVersion((int)(($bits + 7) / 8), $this->level);
             if($ver < 0) {
                 throw new Exception('WRONG VERSION');
                 return -1;
@@ -389,7 +391,7 @@ class PHPQRCode_QRinput {
     public function appendPaddingBit(&$bstream)
     {
         $bits = $bstream->size();
-        $maxwords = PHPQRCode_QRspec::getDataLength($this->version, $this->level);
+        $maxwords = QRspec::getDataLength($this->version, $this->level);
         $maxbits = $maxwords * 8;
 
         if ($maxbits == $bits) {
@@ -403,7 +405,7 @@ class PHPQRCode_QRinput {
         $bits += 4;
         $words = (int)(($bits + 7) / 8);
 
-        $padding = new PHPQRCode_QRbitstream();
+        $padding = new QRbitstream();
         $ret = $padding->appendNum($words * 8 - $bits + 4, 0);
 
         if($ret < 0)
@@ -437,7 +439,7 @@ class PHPQRCode_QRinput {
             return null;
         }
 
-        $bstream = new PHPQRCode_QRbitstream();
+        $bstream = new QRbitstream();
 
         foreach($this->items as $item) {
             $ret = $bstream->append($item->bstream);

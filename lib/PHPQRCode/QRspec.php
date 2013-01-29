@@ -31,7 +31,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-class PHPQRCode_QRspec {
+namespace PHPQRCode;
+
+class QRspec {
 
     public static $capacity = array(
         array(  0,    0, 0, array(   0,    0,    0,    0)),
@@ -80,33 +82,33 @@ class PHPQRCode_QRspec {
     //----------------------------------------------------------------------
     public static function getDataLength($version, $level)
     {
-        return self::$capacity[$version][PHPQRCode_Config::QRCAP_WORDS] - self::$capacity[$version][PHPQRCode_Config::QRCAP_EC][$level];
+        return self::$capacity[$version][Constants::QRCAP_WORDS] - self::$capacity[$version][Constants::QRCAP_EC][$level];
     }
 
     //----------------------------------------------------------------------
     public static function getECCLength($version, $level)
     {
-        return self::$capacity[$version][PHPQRCode_Config::QRCAP_EC][$level];
+        return self::$capacity[$version][Constants::QRCAP_EC][$level];
     }
 
     //----------------------------------------------------------------------
     public static function getWidth($version)
     {
-        return self::$capacity[$version][PHPQRCode_Config::QRCAP_WIDTH];
+        return self::$capacity[$version][Constants::QRCAP_WIDTH];
     }
 
     //----------------------------------------------------------------------
     public static function getRemainder($version)
     {
-        return self::$capacity[$version][PHPQRCode_Config::QRCAP_REMINDER];
+        return self::$capacity[$version][Constants::QRCAP_REMINDER];
     }
 
     //----------------------------------------------------------------------
     public static function getMinimumVersion($size, $level)
     {
 
-        for($i=1; $i<= PHPQRCode_Config::QRSPEC_VERSION_MAX; $i++) {
-            $words  = self::$capacity[$i][PHPQRCode_Config::QRCAP_WORDS] - self::$capacity[$i][PHPQRCode_Config::QRCAP_EC][$level];
+        for($i=1; $i<= Constants::QRSPEC_VERSION_MAX; $i++) {
+            $words  = self::$capacity[$i][Constants::QRCAP_WORDS] - self::$capacity[$i][Constants::QRCAP_EC][$level];
             if($words >= $size)
                 return $i;
         }
@@ -126,7 +128,7 @@ class PHPQRCode_QRspec {
     //----------------------------------------------------------------------
     public static function lengthIndicator($mode, $version)
     {
-        if ($mode == PHPQRCode_Config::QR_MODE_STRUCTURE)
+        if ($mode == Constants::QR_MODE_STRUCTURE)
             return 0;
 
         if ($version <= 9) {
@@ -143,7 +145,7 @@ class PHPQRCode_QRspec {
     //----------------------------------------------------------------------
     public static function maximumWords($mode, $version)
     {
-        if($mode == PHPQRCode_Config::QR_MODE_STRUCTURE)
+        if($mode == Constants::QR_MODE_STRUCTURE)
             return 3;
 
         if($version <= 9) {
@@ -157,7 +159,7 @@ class PHPQRCode_QRspec {
         $bits = self::$lengthTableBits[$mode][$l];
         $words = (1 << $bits) - 1;
 
-        if($mode == PHPQRCode_Config::QR_MODE_KANJI) {
+        if($mode == Constants::QR_MODE_KANJI) {
             $words *= 2; // the number of bytes is required
         }
 
@@ -283,7 +285,7 @@ class PHPQRCode_QRspec {
         $xStart = $ox-2;
 
         for($y=0; $y<5; $y++) {
-            PHPQRCode_QRstr::set($frame, $xStart, $yStart+$y, $finder[$y]);
+            QRstr::set($frame, $xStart, $yStart+$y, $finder[$y]);
         }
     }
 
@@ -330,7 +332,7 @@ class PHPQRCode_QRspec {
     // Version information pattern (BCH coded).
     // See Table 1 in Appendix D (pp.68) of JIS X0510:2004.
 
-    // size: [PHPQRCode_Config::QRSPEC_VERSION_MAX - 6]
+    // size: [Constants::QRSPEC_VERSION_MAX - 6]
 
     public static $versionPattern = array(
         0x07c94, 0x085bc, 0x09a99, 0x0a4d3, 0x0bbf6, 0x0c762, 0x0d847, 0x0e60d,
@@ -343,7 +345,7 @@ class PHPQRCode_QRspec {
     //----------------------------------------------------------------------
     public static function getVersionPattern($version)
     {
-        if($version < 7 || $version > PHPQRCode_Config::QRSPEC_VERSION_MAX)
+        if($version < 7 || $version > Constants::QRSPEC_VERSION_MAX)
             return 0;
 
         return self::$versionPattern[$version -7];
@@ -394,14 +396,14 @@ class PHPQRCode_QRspec {
         );
 
         for($y=0; $y<7; $y++) {
-            PHPQRCode_QRstr::set($frame, $ox, $oy+$y, $finder[$y]);
+            QRstr::set($frame, $ox, $oy+$y, $finder[$y]);
         }
     }
 
     //----------------------------------------------------------------------
     public static function createFrame($version)
     {
-        $width = self::$capacity[$version][PHPQRCode_Config::QRCAP_WIDTH];
+        $width = self::$capacity[$version][Constants::QRCAP_WIDTH];
         $frameLine = str_repeat ("\0", $width);
         $frame = array_fill(0, $width, $frameLine);
 
@@ -422,14 +424,14 @@ class PHPQRCode_QRspec {
 
         $setPattern = str_repeat("\xc0", 8);
 
-        PHPQRCode_QRstr::set($frame, 0, 7, $setPattern);
-        PHPQRCode_QRstr::set($frame, $width-8, 7, $setPattern);
-        PHPQRCode_QRstr::set($frame, 0, $width - 8, $setPattern);
+        QRstr::set($frame, 0, 7, $setPattern);
+        QRstr::set($frame, $width-8, 7, $setPattern);
+        QRstr::set($frame, 0, $width - 8, $setPattern);
 
         // Format info
         $setPattern = str_repeat("\x84", 9);
-        PHPQRCode_QRstr::set($frame, 0, 8, $setPattern);
-        PHPQRCode_QRstr::set($frame, $width - 8, 8, $setPattern, 8);
+        QRstr::set($frame, 0, 8, $setPattern);
+        QRstr::set($frame, $width - 8, 8, $setPattern, 8);
 
         $yOffset = $width - 8;
 
@@ -545,14 +547,14 @@ class PHPQRCode_QRspec {
     //----------------------------------------------------------------------
     public static function newFrame($version)
     {
-        if($version < 1 || $version > PHPQRCode_Config::QRSPEC_VERSION_MAX)
+        if($version < 1 || $version > Constants::QRSPEC_VERSION_MAX)
             return null;
 
         if(!isset(self::$frames[$version])) {
 
-            $fileName = PHPQRCode_Config::QR_CACHE_DIR.'frame_'.$version.'.dat';
+            $fileName = Constants::QR_CACHE_DIR.'frame_'.$version.'.dat';
 
-            if (PHPQRCode_Config::QR_CACHEABLE) {
+            if (Constants::QR_CACHEABLE) {
                 if (file_exists($fileName)) {
                     self::$frames[$version] = self::unserial(file_get_contents($fileName));
                 } else {
