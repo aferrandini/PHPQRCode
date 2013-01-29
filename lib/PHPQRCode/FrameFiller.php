@@ -4,7 +4,10 @@
  *
  * Created by arielferrandini
  */
-class PHPQRCode_FrameFiller {
+
+namespace PHPQRCode;
+
+class FrameFiller {
 
     public $width;
     public $frame;

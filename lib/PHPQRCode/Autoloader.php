@@ -1,6 +1,6 @@
 <?php
 /**
- * PHPQRCode
+ * Autoloader
  *
  * Copyright (c) 2006 - 2011 PHPExcel
  *
@@ -22,29 +22,27 @@
  * @package    PHPQRCode
  */
 
-PHPQRCode_Autoloader::Register();
+namespace PHPQRCode;
 
-class PHPQRCode_Autoloader
+class Autoloader
 {
-	public static function Register() {
-		return spl_autoload_register(array('PHPQRCode_Autoloader', 'Load'));
-	}	//	function Register()
+	public static function register()
+    {
+		spl_autoload_register(array(new self, 'autoload'));
+    }
 
-
-	public static function Load($pObjectName){
-		if ((class_exists($pObjectName)) || (strpos($pObjectName, 'PHPQRCode') === False)) {
+	public static function autoload($class)
+    {
+		if ((class_exists($class)) || (strpos($class, 'PHPQRCode') !== 0)) {
 			return false;
 		}
 
-		$pObjectFilePath =	PHPQRCODE_ROOT.
-							str_replace('_',DIRECTORY_SEPARATOR,$pObjectName).
-							'.php';
+		$file =	dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
+            . str_replace(array('\\', "\0"), array('/', ''), $class).'.php';
 
-		if ((file_exists($pObjectFilePath) === false) || (is_readable($pObjectFilePath) === false)) {
-			return false;
+		if (is_file($file)) {
+			require $file;
 		}
-
-		require($pObjectFilePath);
-	}	//	function Load()
+    }
 
 }

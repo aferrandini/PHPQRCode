@@ -1,6 +1,8 @@
 <?php
 
-class PHPQRCode_QRinputItem {
+namespace PHPQRCode;
+
+class QRinputItem {
 
     public $mode;
     public $size;
@@ -15,7 +17,7 @@ class PHPQRCode_QRinputItem {
             $setData = array_merge($setData, array_fill(0,$size-count($setData),0));
         }
 
-        if(!PHPQRCode_QRinput::check($mode, $size, $setData)) {
+        if(!QRinput::check($mode, $size, $setData)) {
             throw new Exception('Error m:'.$mode.',s:'.$size.',d:'.join(',',$setData));
             return null;
         }
@@ -32,11 +34,11 @@ class PHPQRCode_QRinputItem {
         try {
 
             $words = (int)($this->size / 3);
-            $bs = new PHPQRCode_QRbitstream();
+            $bs = new QRbitstream();
 
             $val = 0x1;
             $bs->appendNum(4, $val);
-            $bs->appendNum(PHPQRCode_QRspec::lengthIndicator(PHPQRCode_Config::QR_MODE_NUM, $version), $this->size);
+            $bs->appendNum(QRspec::lengthIndicator(Constants::QR_MODE_NUM, $version), $this->size);
 
             for($i=0; $i<$words; $i++) {
                 $val  = (ord($this->data[$i*3  ]) - ord('0')) * 100;
@@ -67,20 +69,20 @@ class PHPQRCode_QRinputItem {
     {
         try {
             $words = (int)($this->size / 2);
-            $bs = new PHPQRCode_QRbitstream();
+            $bs = new QRbitstream();
 
             $bs->appendNum(4, 0x02);
-            $bs->appendNum(PHPQRCode_QRspec::lengthIndicator(PHPQRCode_Config::QR_MODE_AN, $version), $this->size);
+            $bs->appendNum(QRspec::lengthIndicator(Constants::QR_MODE_AN, $version), $this->size);
 
             for($i=0; $i<$words; $i++) {
-                $val  = (int)PHPQRCode_QRinput::lookAnTable(ord($this->data[$i*2  ])) * 45;
-                $val += (int)PHPQRCode_QRinput::lookAnTable(ord($this->data[$i*2+1]));
+                $val  = (int)QRinput::lookAnTable(ord($this->data[$i*2  ])) * 45;
+                $val += (int)QRinput::lookAnTable(ord($this->data[$i*2+1]));
 
                 $bs->appendNum(11, $val);
             }
 
             if($this->size & 1) {
-                $val = PHPQRCode_QRinput::lookAnTable(ord($this->data[$words * 2]));
+                $val = QRinput::lookAnTable(ord($this->data[$words * 2]));
                 $bs->appendNum(6, $val);
             }
 
@@ -96,10 +98,10 @@ class PHPQRCode_QRinputItem {
     public function encodeMode8($version)
     {
         try {
-            $bs = new PHPQRCode_QRbitstream();
+            $bs = new QRbitstream();
 
             $bs->appendNum(4, 0x4);
-            $bs->appendNum(PHPQRCode_QRspec::lengthIndicator(PHPQRCode_Config::QR_MODE_8, $version), $this->size);
+            $bs->appendNum(QRspec::lengthIndicator(Constants::QR_MODE_8, $version), $this->size);
 
             for($i=0; $i<$this->size; $i++) {
                 $bs->appendNum(8, ord($this->data[$i]));
@@ -118,10 +120,10 @@ class PHPQRCode_QRinputItem {
     {
         try {
 
-            $bs = new PHPQRCode_QRbitstream();
+            $bs = new QRbitstream();
 
             $bs->appendNum(4, 0x8);
-            $bs->appendNum(PHPQRCode_QRspec::lengthIndicator(PHPQRCode_Config::QR_MODE_KANJI, $version), (int)($this->size / 2));
+            $bs->appendNum(QRspec::lengthIndicator(Constants::QR_MODE_KANJI, $version), (int)($this->size / 2));
 
             for($i=0; $i<$this->size; $i+=2) {
                 $val = (ord($this->data[$i]) << 8) | ord($this->data[$i+1]);
@@ -149,7 +151,7 @@ class PHPQRCode_QRinputItem {
     public function encodeModeStructure()
     {
         try {
-            $bs =  new PHPQRCode_QRbitstream();
+            $bs =  new QRbitstream();
 
             $bs->appendNum(4, 0x03);
             $bs->appendNum(4, ord($this->data[1]) - 1);
@@ -173,16 +175,16 @@ class PHPQRCode_QRinputItem {
             $version = 1;
 
         switch($this->mode) {
-            case PHPQRCode_Config::QR_MODE_NUM:        $bits = PHPQRCode_QRinput::estimateBitsModeNum($this->size);    break;
-            case PHPQRCode_Config::QR_MODE_AN:        $bits = PHPQRCode_QRinput::estimateBitsModeAn($this->size);    break;
-            case PHPQRCode_Config::QR_MODE_8:            $bits = PHPQRCode_QRinput::estimateBitsMode8($this->size);    break;
-            case PHPQRCode_Config::QR_MODE_KANJI:        $bits = PHPQRCode_QRinput::estimateBitsModeKanji($this->size);break;
-            case PHPQRCode_Config::QR_MODE_STRUCTURE:    return PHPQRCode_Config::STRUCTURE_HEADER_BITS;
+            case Constants::QR_MODE_NUM:        $bits = QRinput::estimateBitsModeNum($this->size);    break;
+            case Constants::QR_MODE_AN:        $bits = QRinput::estimateBitsModeAn($this->size);    break;
+            case Constants::QR_MODE_8:            $bits = QRinput::estimateBitsMode8($this->size);    break;
+            case Constants::QR_MODE_KANJI:        $bits = QRinput::estimateBitsModeKanji($this->size);break;
+            case Constants::QR_MODE_STRUCTURE:    return Constants::STRUCTURE_HEADER_BITS;
             default:
                 return 0;
         }
 
-        $l = PHPQRCode_QRspec::lengthIndicator($this->mode, $version);
+        $l = QRspec::lengthIndicator($this->mode, $version);
         $m = 1 << $l;
         $num = (int)(($this->size + $m - 1) / $m);
 
@@ -197,17 +199,17 @@ class PHPQRCode_QRinputItem {
         try {
 
             unset($this->bstream);
-            $words = PHPQRCode_QRspec::maximumWords($this->mode, $version);
+            $words = QRspec::maximumWords($this->mode, $version);
 
             if($this->size > $words) {
 
-                $st1 = new PHPQRCode_QRinputItem($this->mode, $words, $this->data);
-                $st2 = new PHPQRCode_QRinputItem($this->mode, $this->size - $words, array_slice($this->data, $words));
+                $st1 = new QRinputItem($this->mode, $words, $this->data);
+                $st2 = new QRinputItem($this->mode, $this->size - $words, array_slice($this->data, $words));
 
                 $st1->encodeBitStream($version);
                 $st2->encodeBitStream($version);
 
-                $this->bstream = new PHPQRCode_QRbitstream();
+                $this->bstream = new QRbitstream();
                 $this->bstream->append($st1->bstream);
                 $this->bstream->append($st2->bstream);
 
@@ -219,11 +221,11 @@ class PHPQRCode_QRinputItem {
                 $ret = 0;
 
                 switch($this->mode) {
-                    case PHPQRCode_Config::QR_MODE_NUM:        $ret = $this->encodeModeNum($version);    break;
-                    case PHPQRCode_Config::QR_MODE_AN:        $ret = $this->encodeModeAn($version);    break;
-                    case PHPQRCode_Config::QR_MODE_8:            $ret = $this->encodeMode8($version);    break;
-                    case PHPQRCode_Config::QR_MODE_KANJI:        $ret = $this->encodeModeKanji($version);break;
-                    case PHPQRCode_Config::QR_MODE_STRUCTURE:    $ret = $this->encodeModeStructure();    break;
+                    case Constants::QR_MODE_NUM:        $ret = $this->encodeModeNum($version);    break;
+                    case Constants::QR_MODE_AN:        $ret = $this->encodeModeAn($version);    break;
+                    case Constants::QR_MODE_8:            $ret = $this->encodeMode8($version);    break;
+                    case Constants::QR_MODE_KANJI:        $ret = $this->encodeModeKanji($version);break;
+                    case Constants::QR_MODE_STRUCTURE:    $ret = $this->encodeModeStructure();    break;
 
                     default:
                         break;

@@ -22,7 +22,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-class PHPQRCode_QRtools {
+namespace PHPQRCode;
+
+class QRtools {
 
     //----------------------------------------------------------------------
     public static function binarize($frame)
@@ -52,7 +54,7 @@ class PHPQRCode_QRtools {
             $eccLevel = $mode[1];
         }
 
-        $qrTab = PHPQRCode_QRcode::text($code, false, $eccLevel);
+        $qrTab = QRcode::text($code, false, $eccLevel);
         $size = count($qrTab);
 
         $barcode_array['num_rows'] = $size;
@@ -78,14 +80,14 @@ class PHPQRCode_QRtools {
     //----------------------------------------------------------------------
     public static function buildCache()
     {
-        PHPQRCode_QRtools::markTime('before_build_cache');
+        QRtools::markTime('before_build_cache');
 
-        $mask = new PHPQRCode_QRmask();
-        for ($a=1; $a <= PHPQRCode_Config::QRSPEC_VERSION_MAX; $a++) {
-            $frame = PHPQRCode_QRspec::newFrame($a);
-            if (PHPQRCode_Config::QR_IMAGE) {
-                $fileName = PHPQRCode_Config::QR_CACHE_DIR.'frame_'.$a.'.png';
-                PHPQRCode_QRimage::png(self::binarize($frame), $fileName, 1, 0);
+        $mask = new QRmask();
+        for ($a=1; $a <= Constants::QRSPEC_VERSION_MAX; $a++) {
+            $frame = QRspec::newFrame($a);
+            if (Constants::QR_IMAGE) {
+                $fileName = Constants::QR_CACHE_DIR.'frame_'.$a.'.png';
+                QRimage::png(self::binarize($frame), $fileName, 1, 0);
             }
 
             $width = count($frame);
@@ -94,18 +96,18 @@ class PHPQRCode_QRtools {
                 $mask->makeMaskNo($maskNo, $width, $frame, $bitMask, true);
         }
 
-        PHPQRCode_QRtools::markTime('after_build_cache');
+        QRtools::markTime('after_build_cache');
     }
 
     //----------------------------------------------------------------------
     public static function log($outfile, $err)
     {
-        if (PHPQRCode_Config::QR_LOG_DIR !== false) {
+        if (Constants::QR_LOG_DIR !== false) {
             if ($err != '') {
                 if ($outfile !== false) {
-                    file_put_contents(PHPQRCode_Config::QR_LOG_DIR.basename($outfile).'-errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
+                    file_put_contents(Constants::QR_LOG_DIR.basename($outfile).'-errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
                 } else {
-                    file_put_contents(PHPQRCode_Config::QR_LOG_DIR.'errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
+                    file_put_contents(Constants::QR_LOG_DIR.'errors.txt', date('Y-m-d H:i:s').': '.$err, FILE_APPEND);
                 }
             }
         }
@@ -166,4 +168,4 @@ class PHPQRCode_QRtools {
 
 }
 
-PHPQRCode_QRtools::markTime('start');
+QRtools::markTime('start');
