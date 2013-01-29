@@ -2,7 +2,7 @@
 
 To install this library please follow the next steps:
 
-## If you are running Symfony 2.1.x and 2.2.x
+## If you are running Symfony 2.1.x or 2.2.x
 
 ### Install the library using `composer`:
 
@@ -55,6 +55,7 @@ Sample code:
 
     \PHPQRCode\QRcode::png("Test", "/tmp/qrcode.png", 'L', 4, 2);
 
+This code will generate a PNG file on '/tmp/qrcode.png' with a QRCode that contains the word 'Test'.
 
 ## Acknowledgements
 
