@@ -2,9 +2,9 @@
 
 To install this library please follow the next steps:
 
-## Symfony 2.1.x and 2.2.x
+## If you are running Symfony 2.1.x and 2.2.x
 
-### Using `composer`:
+### Install the library using `composer`:
 
 Add the required module to your `composer.json` file:
 
@@ -18,7 +18,7 @@ Add the required module to your `composer.json` file:
 
 Then run the command `composer update`.
 
-### Install with `git clone`:
+### Install the library with `git clone`:
 
 Change directory to your Symfony2 root and execute:
 
@@ -30,7 +30,7 @@ Open the file `app/autoload.php` and insert this new line after `$loader = ...`:
 
     $loader->add('PHPQRCode', __DIR__.'/../vendor/aferrandini/phpqrcode/PHPQRCode/lib');
 
-## Symfony 2.0.x
+## If you are running Symfony 2.0.x :(
 
 First add the repo to your `deps` file:
 
@@ -44,13 +44,9 @@ Then install the library with the command:
 
 Now the library is installed so, now we need to load in the `autoload.php`
 
-Open the file `./app/autoload.php` and add this line:
+Open the file `./app/autload.php` and add this line:
 
-    $loader->registerNamespaces(array(
-        // ...
-        'PHPQRCode' => __DIR__.'/../vendor/phpqrcode/lib',
-        // ...
-    ));
+    require __DIR__ . '/../vendor/aferrandini/PHPQRCode/lib/Autoloader.php';
 
 
 ## Usage
