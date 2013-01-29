@@ -11,7 +11,7 @@ Add the required module to your `composer.json` file:
     {
         "require": {
             ...
-            "aferrandini/phpqrcode": "master-dev"
+            "aferrandini/phpqrcode": "dev-master"
             ...
         }
     }
