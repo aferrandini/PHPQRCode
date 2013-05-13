@@ -28,7 +28,7 @@ Register the library:
 
 Open the file `app/autoload.php` and insert this new line after `$loader = ...`:
 
-    $loader->add('PHPQRCode', __DIR__.'/../vendor/aferrandini/phpqrcode/PHPQRCode/lib');
+    $loader->add('PHPQRCode', __DIR__ . '/../vendor/aferrandini/phpqrcode/lib');
 
 ## If you are running Symfony 2.0.x :(
 
