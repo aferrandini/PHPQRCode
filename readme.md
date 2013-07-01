@@ -1,10 +1,8 @@
-# PHP QRCode Library for Symfony2
+# PHP QRCode Library
 
 To install this library please follow the next steps:
 
-## If you are running Symfony 2.1.x or 2.2.x
-
-### Install the library using `composer`:
+## Install the library using `composer`:
 
 Add the required module to your `composer.json` file:
 
@@ -18,11 +16,7 @@ Add the required module to your `composer.json` file:
 
 Then run the command `composer update`.
 
-### Install the library with `git clone`:
-
-Change directory to your Symfony2 root and execute:
-
-    git clone https://github.com/aferrandini/PHPQRCode.git vendor/aferrandini/PHPQRCode
+## If you are running Symfony 2.0.x
 
 Register the library:
 
