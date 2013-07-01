@@ -16,32 +16,6 @@ Add the required module to your `composer.json` file:
 
 Then run the command `composer update`.
 
-## If you are running Symfony 2.0.x
-
-Register the library:
-
-Open the file `app/autoload.php` and insert this new line after `$loader = ...`:
-
-    $loader->add('PHPQRCode', __DIR__ . '/../vendor/aferrandini/phpqrcode/lib');
-
-## If you are running Symfony 2.0.x :(
-
-First add the repo to your `deps` file:
-
-    [PHPQRCode]
-        git=https://github.com/aferrandini/PHPQRCode.git
-        target=/phpqrcode
-
-Then install the library with the command:
-
-    ./bin/vendors install
-
-Now the library is installed so, now we need to load in the `autoload.php`
-
-Open the file `./app/autload.php` and add this line:
-
-    require __DIR__ . '/../vendor/aferrandini/PHPQRCode/lib/Autoloader.php';
-
 
 ## Usage
 
