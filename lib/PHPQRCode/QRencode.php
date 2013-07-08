@@ -27,6 +27,8 @@
 
 namespace PHPQRCode;
 
+use Exception;
+
 class QRencode {
 
     public $casesensitive = true;

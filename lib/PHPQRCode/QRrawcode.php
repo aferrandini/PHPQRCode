@@ -7,6 +7,8 @@
 
 namespace PHPQRCode;
 
+use Exception;
+
 class QRrawcode {
     public $version;
     public $datacode = array();

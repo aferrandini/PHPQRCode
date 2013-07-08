@@ -27,6 +27,8 @@
 
 namespace PHPQRCode;
 
+use Exception;
+
 class QRinput {
 
     public $items;

@@ -7,6 +7,8 @@
 
 namespace PHPQRCode;
 
+use Exception;
+
 class QRcode {
 
     public $version;
