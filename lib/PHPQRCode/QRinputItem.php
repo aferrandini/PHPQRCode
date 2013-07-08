@@ -2,6 +2,8 @@
 
 namespace PHPQRCode;
 
+use Exception;
+
 class QRinputItem {
 
     public $mode;
