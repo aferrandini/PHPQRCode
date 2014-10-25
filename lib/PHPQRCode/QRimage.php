@@ -63,7 +63,7 @@ class QRimage {
     }
 
     //----------------------------------------------------------------------
-    private static function image($frame, $pixelPerPoint = 4, $outerFrame = 4)
+    public static function image($frame, $pixelPerPoint = 4, $outerFrame = 4)
     {
         $h = count($frame);
         $w = strlen($frame[0]);
