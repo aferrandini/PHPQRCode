@@ -17,5 +17,6 @@
     },
     "autoload": {
         "psr-0": { "PHPQRCode": "lib/" }
-    }
+    },
+    "abandoned": "endroid/qr-code"
 }
