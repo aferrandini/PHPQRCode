@@ -1,3 +1,7 @@
+# This repository is Abandoned!
+Please see [endroid/qr-code!https://github.com/endroid/qr-code]
+
+
 # PHP QRCode Library
 
 To install this library please follow the next steps:
