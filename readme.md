@@ -1,5 +1,5 @@
 # This repository is Abandoned!
-Please see [endroid/qr-code!https://github.com/endroid/qr-code]
+Please see [endroid/qr-code](https://github.com/endroid/qr-code)
 
 
 # PHP QRCode Library
